@@ -251,6 +251,9 @@ private fun WordDetailDialog(state: WordDetailState, onDismiss: () -> Unit) {
                     LabeledDetail(if (translations.size > 1) "Translations" else "Translation", translationsText)
                     LabeledDetail("Part of speech", state.explanation.partOfSpeech)
                     LabeledDetail("Form", state.explanation.grammaticalForm)
+                    if (!state.explanation.baseForm.equals(state.word, ignoreCase = true)) {
+                        LabeledDetail("Dictionary form", state.explanation.baseForm)
+                    }
                     if (state.explanation.notes.isNotBlank()) {
                         LabeledDetail("Notes", state.explanation.notes)
                     }

@@ -220,6 +220,8 @@ class GeminiTranslationService(
               enough; give more only when genuinely different valid renderings exist),
             - its part of speech,
             - its exact grammatical form (tense, case, number, mood — whatever applies),
+            - its dictionary/base form (infinitive for verbs, nominative singular for nouns,
+              etc.) — if "$word" is already in that base form, just repeat it unchanged,
             - any other short, useful note (idiom, nuance, irregularity) — leave empty if none.
         """.trimIndent()
 
@@ -236,9 +238,13 @@ class GeminiTranslationService(
                     )
                     .put("partOfSpeech", JSONObject().put("type", "STRING"))
                     .put("grammaticalForm", JSONObject().put("type", "STRING"))
+                    .put("baseForm", JSONObject().put("type", "STRING"))
                     .put("notes", JSONObject().put("type", "STRING")),
             )
-            .put("required", JSONArray(listOf("translations", "partOfSpeech", "grammaticalForm", "notes")))
+            .put(
+                "required",
+                JSONArray(listOf("translations", "partOfSpeech", "grammaticalForm", "baseForm", "notes")),
+            )
 
         return buildGenerateContentRequest(prompt, responseSchema)
     }
@@ -250,6 +256,7 @@ class GeminiTranslationService(
             translations = List(translationsJson.length()) { translationsJson.getString(it) },
             partOfSpeech = json.getString("partOfSpeech"),
             grammaticalForm = json.getString("grammaticalForm"),
+            baseForm = json.getString("baseForm"),
             notes = json.optString("notes"),
         )
     }

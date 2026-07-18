@@ -31,6 +31,7 @@ class StubTranslationService : TranslationService {
             translations = listOf("[$targetLanguage] $word"),
             partOfSpeech = "placeholder",
             grammaticalForm = "placeholder",
+            baseForm = word,
             notes = "Placeholder explanation for \"$word\" in: \"$sentenceContext\"",
         )
     }

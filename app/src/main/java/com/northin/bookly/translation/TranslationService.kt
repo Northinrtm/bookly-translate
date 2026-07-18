@@ -18,6 +18,9 @@ data class WordExplanation(
     val translations: List<String>,
     val partOfSpeech: String,
     val grammaticalForm: String,
+    /** Dictionary/lemma form (infinitive, nominative singular, etc.) — same as the original
+     *  word itself when it's already in that form. */
+    val baseForm: String,
     val notes: String,
 )
 
