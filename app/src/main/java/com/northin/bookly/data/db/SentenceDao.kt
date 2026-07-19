@@ -60,8 +60,14 @@ interface SentenceDao {
     @Query("SELECT DISTINCT textHash FROM book_sentences WHERE bookId = :bookId")
     suspend fun getTextHashesForBook(bookId: String): List<String>
 
-    @Query("DELETE FROM sentence_translations WHERE textHash IN (:textHashes)")
-    suspend fun deleteTranslationsByHashes(textHashes: List<String>)
+    @Query(
+        """
+        DELETE FROM sentence_translations
+        WHERE textHash IN (:textHashes)
+          AND textHash NOT IN (SELECT textHash FROM book_sentences)
+        """,
+    )
+    suspend fun deleteOrphanedTranslations(textHashes: List<String>)
 
     @Query(
         """

@@ -124,10 +124,12 @@ class BookImporter(
         database.sentenceDao().deleteForBook(book.id)
         database.bookBlockDao().deleteForBook(book.id)
         database.bookDao().delete(book.id)
-        // SQLite caps the number of parameters in a single IN (...) clause (~999), which a
-        // long book's distinct sentence count can exceed — delete in safely-sized chunks.
+        // Only delete translations no other book still references — deleteForBook above already
+        // removed this book's own sentence rows, so deleteOrphanedTranslations' NOT IN subquery
+        // now only matches hashes truly unused elsewhere. SQLite caps IN (...) params (~999),
+        // which a long book's distinct sentence count can exceed — delete in safely-sized chunks.
         textHashes.chunked(900).forEach { chunk ->
-            database.sentenceDao().deleteTranslationsByHashes(chunk)
+            database.sentenceDao().deleteOrphanedTranslations(chunk)
         }
 
         File(book.filePath).delete()
