@@ -16,7 +16,7 @@ private val MIGRATION_3_4 = object : Migration(3, 4) {
 @Database(
     entities = [Book::class, BookSentence::class, SentenceTranslation::class, BookBlock::class],
     version = 4,
-    exportSchema = false,
+    exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
